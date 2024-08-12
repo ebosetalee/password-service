@@ -1,7 +1,17 @@
 package types
 
 import "time"
+type Response struct {
+	Code   int `json:"code,omitempty"`
+	// Error   string `json:"error,omitempty"`
+	Message string `json:"message,omitempty"`
+	Data    any    `json:"data,omitempty"`
+}
 
+type UserRepo interface{
+	GetUserByEmail(email string) (*User, error)
+	CreateUser(user User) error
+}
 
 type User struct {
 	ID                int       `json:"id"`

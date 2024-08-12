@@ -5,7 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
+
 	"net/http"
+
+	"github.com/ebosetalee/password-service.git/types"
 )
 
 var ErrEmptyBody = errors.New("body must not be empty")
@@ -39,12 +43,24 @@ func ReadJSON(r *http.Request, dst interface{}) error {
 	return nil
 }
 
-func WriteJSON(w http.ResponseWriter, status int, v any) error {
+func WriteJSON(w http.ResponseWriter, status int, v types.Response) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	return json.NewEncoder(w).Encode(v)
 }
 
 func WriteError(w http.ResponseWriter, status int, err error) {
-	WriteJSON(w, status, map[string]string{"error": err.Error()})
+	var errMsg string
+	if err != nil {
+		errMsg = err.Error()
+	} else {
+		errMsg = "Something went wrong try again later"
+	}
+	log.Println(err)
+	response := types.Response{
+		Code:    status,
+		Message: errMsg,
+	}
+
+	WriteJSON(w, status, response)
 }
