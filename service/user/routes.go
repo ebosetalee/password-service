@@ -31,7 +31,7 @@ func (h *Handler) register(w http.ResponseWriter, r *http.Request) {
 	// get json payload
 	var payload types.RegisterPayload
 	if err := utils.ReadJSON(r, &payload); err != nil {
-		utils.WriteError(w, http.StatusBadRequest, err)
+		utils.WriteError(w, http.StatusPreconditionFailed, err)
 		return
 	}
 

@@ -18,6 +18,10 @@ func ReadJSON(r *http.Request, dst interface{}) error {
 	var syntaxError *json.SyntaxError
 	var unmarshalTypeError *json.UnmarshalTypeError
 
+	if r.Body == nil {
+		return ErrEmptyBody
+	}
+
 	err := json.NewDecoder(r.Body).Decode(dst)
 	if err != nil {
 		switch {
@@ -56,7 +60,8 @@ func WriteError(w http.ResponseWriter, status int, err error) {
 	} else {
 		errMsg = "Something went wrong try again later"
 	}
-	log.Println(err)
+	log.Println("status code:", status)
+	// log.Println(err)
 	response := types.Response{
 		Code:    status,
 		Message: errMsg,
