@@ -38,7 +38,13 @@ func (h *Handler) register(w http.ResponseWriter, r *http.Request) {
 	// check if user exists
 	_, err := h.repo.GetUserByEmail(payload.Email)
 	if err == nil {
-		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("user with email %s already exists", payload.Email))
+		utils.WriteError(w, http.StatusConflict, fmt.Errorf("user with email %s already exists", payload.Email))
+		return
+	}
+
+	hashedPassword, err := auth.Hash(payload.Password)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -47,7 +53,7 @@ func (h *Handler) register(w http.ResponseWriter, r *http.Request) {
 		FirstName: payload.FirstName,
 		LastName:  payload.LastName,
 		Email:     payload.Email,
-		Password:  payload.Password,
+		Password:  hashedPassword,
 	})
 
 	if err != nil {
