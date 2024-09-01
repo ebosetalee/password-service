@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/ebosetalee/password-service.git/service/auth"
 	"github.com/ebosetalee/password-service.git/types"
 	"github.com/ebosetalee/password-service.git/utils"
 	"github.com/gorilla/mux"
@@ -32,6 +33,12 @@ func (h *Handler) register(w http.ResponseWriter, r *http.Request) {
 	var payload types.RegisterPayload
 	if err := utils.ReadJSON(r, &payload); err != nil {
 		utils.WriteError(w, http.StatusPreconditionFailed, err)
+		return
+	}
+
+	// validate payload
+	if err := utils.Validate.Struct(payload); err != nil {
+		utils.WriteError(w, http.StatusPreconditionFailed, fmt.Errorf(utils.ValidateError(err)))
 		return
 	}
 

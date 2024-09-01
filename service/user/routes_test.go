@@ -32,9 +32,9 @@ func TestUser(t *testing.T) {
 	payload := types.RegisterPayload{
 		FirstName: "John Doe",
 		LastName:  "John Doe",
-		Email:     "",
+		Email:     "asd",
 		Username:  "JD",
-		Password:  "password",
+		Password:  "passwor",
 	}
 
 	res, _ := json.Marshal(payload)
@@ -54,6 +54,34 @@ func TestUser(t *testing.T) {
 
 		if rr.Code != http.StatusPreconditionFailed {
 			t.Errorf("expected status code %d, got status code %d", http.StatusPreconditionFailed, rr.Code)
+		}
+	})
+
+
+	validPayload := types.RegisterPayload{
+		FirstName: "John Doe",
+		LastName:  "John Doe",
+		Email:     "valid@gmail.com",
+		Username:  "JD",
+		Password:  "password",
+	}
+
+	res, _ = json.Marshal(validPayload)
+	t.Run("Should register user", func(t *testing.T) {
+		req, err := http.NewRequest(http.MethodPost, "/register", bytes.NewBuffer(res))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		rr := httptest.NewRecorder()
+		router := mux.NewRouter()
+
+		router.HandleFunc("/register", handler.register).Methods(http.MethodPost)
+
+		router.ServeHTTP(rr, req)
+
+		if rr.Code != http.StatusCreated {
+			t.Errorf("expected status code %d, got status code %d", http.StatusCreated, rr.Code)
 		}
 	})
 }
