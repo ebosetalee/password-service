@@ -61,7 +61,7 @@ func WriteError(w http.ResponseWriter, status int, err error) {
 		errMsg = "Something went wrong try again later"
 	}
 	log.Println("status code:", status)
-	// log.Println(err)
+	log.Println(err)
 	response := types.Response{
 		Code:    status,
 		Message: errMsg,
