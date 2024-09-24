@@ -15,16 +15,16 @@ type UserRepo interface {
 }
 
 type User struct {
-	ID                int       `json:"id"`
-	FirstName         string    `json:"firstName"`
-	LastName          string    `json:"lastName"`
-	Username          string    `json:"username,omitempty"`
-	Email             string    `json:"email"`
-	Password          string    `json:"password"`
-	PasswordChangedAt time.Time `json:"passwordChangedAt,omitempty"`
-	CreatedAt         time.Time `json:"createdAt"`
-	UpdatedAt         time.Time `json:"updatedAt"`
-	DeletedAt         time.Time `json:"deletedAt,omitempty"`
+	ID                string     `json:"id"`
+	FirstName         string     `json:"firstName"`
+	LastName          string     `json:"lastName"`
+	Username          *string    `json:"username,omitempty"`
+	Email             string     `json:"email"`
+	Password          string     `json:"password"`
+	PasswordChangedAt *time.Time `json:"passwordChangedAt,omitempty"`
+	CreatedAt         time.Time  `json:"createdAt"`
+	UpdatedAt         time.Time  `json:"updatedAt"`
+	DeletedAt         *time.Time `json:"deletedAt,omitempty"`
 }
 
 type RegisterPayload struct {
@@ -33,16 +33,13 @@ type RegisterPayload struct {
 	Username  string `json:"username,omitempty"`
 	Email     string `json:"email" validate:"required,email"`
 	Password  string `json:"password" validate:"required,min=8"`
-	// passwordChangedAt date
-	// deletedAt date
 }
 
-// type Register struct {
-// 	FirstName string `json:"firstName" valid:"required~please provide a first name"`
-// 	LastName  string `json:"lastName" valid:"required~please provide a last name"`
-// 	Username  string `json:"username,omitempty"`
-// 	Email     string `json:"email" valid:"required~please provide an email,email"`
-// 	Password  string `json:"password" valid:"required~please provide a password,min=8"`
-// 	// passwordChangedAt date
-// 	// deletedAt date
-// }
+type LoginPayload struct {
+	Email    string `json:"email" valid:"required~please provide an email,email"`
+	Password string `json:"password" valid:"required~please provide a password"`
+}
+type LoginResponse struct {
+	Token string `json:"token"`
+	User  *User  `json:"user"`
+}
