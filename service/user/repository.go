@@ -16,11 +16,13 @@ func NewRepo(db *sql.DB) *Repo {
 }
 
 func (s *Repo) CreateUser(user types.User) error {
-	// _, err := s.db.Exec("INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)", user.FirstName, user.LastName, user.Email, user.Password)
-	// if err != nil {
-	// 	return err
-	// }
+	_, err := s.db.Exec("INSERT INTO users (username, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?)", 
+	user.Username, user.FirstName, user.LastName, user.Email, user.Password)
+	if err != nil {
+		return err
+	}
 
+	// res.LastInsertId()
 	return nil
 }
 
@@ -38,7 +40,28 @@ func (r *Repo) GetUserByEmail(email string) (*types.User, error) {
 		}
 	}
 
-	if u.ID == 0 {
+	if u.Email != email {
+		return nil, fmt.Errorf("user not found")
+	}
+
+	return u, nil
+}
+
+func (r *Repo) GetUserByID(id string) (*types.User, error) {
+	user, err := r.db.Query("SELECT * FROM users WHERE id = ?", id)
+	if err != nil {
+		return nil, err
+	}
+
+	u := new(types.User)
+	for user.Next() {
+		u, err = scanRowsToUser(user)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if u.ID != id {
 		return nil, fmt.Errorf("user not found")
 	}
 
