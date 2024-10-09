@@ -16,6 +16,7 @@ type Config struct {
 	DBName        string
 	JWTSecret     string
 	JWTExpiration int
+	EncryptionKey string
 }
 
 var Env = initConfig()
@@ -32,6 +33,7 @@ func initConfig() Config {
 		DBName:        getStrEnv("DB_NAME", "password-service"),
 		JWTSecret:     getStrEnv("JWT_SECRET", "secret_Key"),
 		JWTExpiration: getIntEnv("JWT_EXPIRATION", 3600),
+		EncryptionKey: getStrEnv("ENCRYPTION_KEY", "somekeysss"),
 	}
 }
 
