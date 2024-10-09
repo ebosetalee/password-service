@@ -48,4 +48,10 @@ func main() {
 			log.Fatal(err)
 		}
 	}
+	// if cmd == "status" {
+    //     err := yourMigrationFunctionHere() // Replace with actual function
+    //     if err != nil {
+    //         log.Fatalf("Error running migration: %v", err)
+    //     }
+    // }
 }
